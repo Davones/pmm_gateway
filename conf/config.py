@@ -28,7 +28,7 @@ class RoutingRule:
 class AppConfig(python_library.utils.baseconfig.BaseConfig):
     # define App config here...
     # okx网关监听的本地地址
-    OKX_PMM_GETWAY_HOSTPORT = ("172.31.24.73", 8088)
+    OKX_PMM_GETWAY_HOSTPORT = ("127.0.0.1", 8088)
     BACKEND_SERVER_MAP = {
         "pmmV2": "127.0.0.1:1495",
         "pmmV1": "127.0.0.1:8080",
