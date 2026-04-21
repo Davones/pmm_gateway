@@ -36,5 +36,7 @@ logger.critical("critical")
 if __name__ == '__main__':
 
     # AppConfig demo
-    print(AppConfig.APP_CONFIG_SAMPLE)
+    print(AppConfig.OKX_PMM_GETWAY_HOSTPORT)
+    print(AppConfig.BACKEND_SERVER_MAP)
+    print(AppConfig.OKX_PMM_REQUEST_ROUTING_TABLE)
     pass
