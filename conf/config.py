@@ -16,8 +16,8 @@ class MatchRule:
 
 class RoutingRule:
     uri: str    # 请求的uri
-    conditions: List[MatchRule]
-    target: str
+    conditions: List[MatchRule] # 如果多个 MatchRule 同时满足, 那么我们认为这个 RoutingRule 被匹配成功
+    target: str # 如果 conditions 全部满足, 则将该请求路由到 target 对应的服务器
 
     def __init__(self, uri: str, conditions: List[MatchRule], target: str):
         self.uri = uri
