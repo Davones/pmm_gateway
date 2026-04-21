@@ -35,13 +35,13 @@ class AppConfig(python_library.utils.baseconfig.BaseConfig):
     }
     OKX_PMM_REQUEST_ROUTING_TABLE = [
         # pricing
-        RoutingRule(uri='pricing', conditions=[MatchRule(field='chainIndex', regex='1')], target="pmmV2"), # 针对 "pricing接口" 的路由规则: 如果 "chainIndex" 字段正则匹配 '1' 成功; 则将请求路由到 pmmV2
-        RoutingRule(uri='pricing', conditions=[], target="pmmV1"), # 针对 "pricing接口" 的路由规则: 无需任何条件, 默认路由到 pmmV1 中去 (如果上面的条件均不匹配, 那么就会走这个路由)
+        RoutingRule(uri='pricing', conditions=[MatchRule(field='chainIndex', regex='1')], target="pmmV2"),
+        RoutingRule(uri='pricing', conditions=[], target="pmmV1"),
 
         # firm-order
-        RoutingRule(uri='firm-order', conditions=[MatchRule(field='chainIndex', regex='1')], target="pmmV2"), # 针对 "firm-order接口" 的路由规则: 如果 "chainIndex" 字段正则匹配 '1' 成功; 则将请求路由到 pmmV2
-        RoutingRule(uri='firm-order', conditions=[MatchRule(field='chainIndex', regex='56'), MatchRule(field='beneficiaryAddress', regex='0x949e4CcD90d661e2c68cB5CEDB9a13c0748bE1f6')], target="pmmV2"), # 针对 "firm-order接口" 的路由规则, 如果: 1. "chainIndex" 字段正则匹配 '56' 成功; 2. "beneficiaryAddress" 字段正则匹配 "..." 成功; 则将请求路由到 pmmV2
-        RoutingRule(uri='firm-order', conditions=[], target="pmmV1"), # 针对 "firm-order接口" 的路由规则: 无需任何条件, 默认路由到 pmmV1 中去 (如果上面的条件均不匹配, 那么就会走这个路由)
+        RoutingRule(uri='firm-order', conditions=[MatchRule(field='chainIndex', regex='1')], target="pmmV2"),
+        RoutingRule(uri='firm-order', conditions=[MatchRule(field='chainIndex', regex='56'), MatchRule(field='beneficiaryAddress', regex='0x949e4CcD90d661e2c68cB5CEDB9a13c0748bE1f6')], target="pmmV2"),
+        RoutingRule(uri='firm-order', conditions=[], target="pmmV1"),
     ]
 
 
