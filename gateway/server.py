@@ -1,6 +1,6 @@
 import logging
 from typing import Optional, Dict, Any
-from fastapi import FastAPI, Request, HTTPException, Response
+from fastapi import FastAPI, Request, Response
 from fastapi.responses import JSONResponse
 
 from gateway.router import Router
@@ -27,23 +27,33 @@ async def handle_pricing(request: Request):
     target_url = router.route(uri, query_params)
 
     if not target_url:
-        raise HTTPException(status_code=500, detail="No backend available for pricing")
+        return JSONResponse(
+            content={"code": "0", "msg": "", "data": {"chainIndex": query_params.get("chainIndex", ""), "levelData": []}},
+            status_code=200,
+        )
 
     full_url = f"http://{target_url}/OKXDEX/rfq/pricing"
 
-    async with HTTPClient() as client:
-        response = await client.forward_request(
-            method="GET",
-            url=full_url,
-            headers=dict(request.headers),
-            params=query_params,
-        )
+    try:
+        async with HTTPClient() as client:
+            response = await client.forward_request(
+                method="GET",
+                url=full_url,
+                headers=dict(request.headers),
+                params=query_params,
+            )
 
-    return JSONResponse(
-        content=response.json() if response.headers.get("content-type", "").startswith("application/json") else {},
-        status_code=response.status_code,
-        headers=dict(response.headers),
-    )
+        return JSONResponse(
+            content=response.json() if response.headers.get("content-type", "").startswith("application/json") else {},
+            status_code=response.status_code,
+            headers=dict(response.headers),
+        )
+    except Exception as e:
+        logger.warning(f"Pricing backend error: {e}, returning empty levelData")
+        return JSONResponse(
+            content={"code": "0", "msg": "", "data": {"chainIndex": query_params.get("chainIndex", ""), "levelData": []}},
+            status_code=200,
+        )
 
 
 @app.post("/OKXDEX/rfq/firm-order")
