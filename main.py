@@ -42,5 +42,5 @@ def main():
 if __name__ == '__main__':
     main()
 
-# curl -v -X GET "http://127.0.0.1:8088/OKXDEX/rfq/pricing?chainIndex=56" -H "X-API-KEY: newworld-api-key-Tm2s#88%sUs6"
-# curl -v -X POST "http://127.0.0.1:8088/OKXDEX/rfq/firm-order" -H "X-API-KEY: newworld-api-key-Tm2s#88%sUs6" -H "Content-Type: application/json" -d '{"chainIndex": "1", "takerAsset": "0x55d398326f99059ff775485246999027b3197955", "makerAsset": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", "takerAmount": "1000000000000000000", "takerAddress": "0x1234567890abcdef1234567890abcdef12345678", "rfqId": 8234567890123, "expiryDuration": 40, "beneficiaryAddress": "0x949e4CcD90d661e2c68cB5CEDB9a13c0748bE1f1", "confidenceT": 5, "confidenceRate": 2000, "confidenceCap": 30000}'
+# curl -v -X GET "http://127.0.0.1:1495/OKXDEX/rfq/pricing?chainIndex=56" -H "X-API-KEY: newworld-api-key-Tm2s#88%sUs6"
+# curl -v -X POST "http://127.0.0.1:1495/OKXDEX/rfq/firm-order" -H "X-API-KEY: newworld-api-key-Tm2s#88%sUs6" -H "Content-Type: application/json" -d '{"chainIndex": "56", "takerAsset": "0x55d398326f99059ff775485246999027b3197955", "makerAsset": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c", "takerAmount": "1000000000000000000", "takerAddress": "0x1234567890abcdef1234567890abcdef12345678", "rfqId": 8234567890123, "expiryDuration": 40, "beneficiaryAddress": "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd", "confidenceT": 5, "confidenceRate": 2000, "confidenceCap": 30000}'
