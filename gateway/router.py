@@ -48,7 +48,7 @@ class Router:
                 return False
 
             field_str = str(field_value)
-            if not re.match(condition.regex, field_str):
+            if not re.match(condition.regex, field_str, re.IGNORECASE):
                 logger.debug(f"Field '{condition.field}' value '{field_str}' does not match regex '{condition.regex}'")
                 return False
 

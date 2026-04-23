@@ -40,7 +40,8 @@ class AppConfig(python_library.utils.baseconfig.BaseConfig):
 
         # firm-order
         # RoutingRule(uri='firm-order', conditions=[MatchRule(field='chainIndex', regex='1')], target="pmmV2"),
-        RoutingRule(uri='firm-order', conditions=[MatchRule(field='chainIndex', regex='56'), MatchRule(field='beneficiaryAddress', regex='0x949e4CcD90d661e2c68cB5CEDB9a13c0748bE1f6')], target="pmmV1"),
+        # RoutingRule(uri='firm-order', conditions=[MatchRule(field='beneficiaryAddress', regex='0x.*[Ff]{2}$')], target="pmmV1"),
+        # RoutingRule(uri='firm-order', conditions=[MatchRule(field='chainIndex', regex='56'), MatchRule(field='beneficiaryAddress', regex='0x949e4CcD90d661e2c68cB5CEDB9a13c0748bE1f6')], target="pmmV1"),
         RoutingRule(uri='firm-order', conditions=[], target="pmmV2"),
     ]
 
