@@ -28,20 +28,20 @@ class RoutingRule:
 class AppConfig(python_library.utils.baseconfig.BaseConfig):
     # define App config here...
     # okx网关监听的本地地址
-    OKX_PMM_GETWAY_HOSTPORT = ("127.0.0.1", 8088)
+    OKX_PMM_GETWAY_HOSTPORT = ("0.0.0.0", 1495)
     BACKEND_SERVER_MAP = {
-        "pmmV2": "127.0.0.1:1495",
+        "pmmV2": "127.0.0.1:19099",
         "pmmV1": "127.0.0.1:8080",
     }
     OKX_PMM_REQUEST_ROUTING_TABLE = [
         # pricing
-        RoutingRule(uri='pricing', conditions=[MatchRule(field='chainIndex', regex='1')], target="pmmV2"),
-        RoutingRule(uri='pricing', conditions=[], target="pmmV1"),
+        # RoutingRule(uri='pricing', conditions=[MatchRule(field='chainIndex', regex='1')], target="pmmV2"),
+        RoutingRule(uri='pricing', conditions=[], target="pmmV2"),
 
         # firm-order
-        RoutingRule(uri='firm-order', conditions=[MatchRule(field='chainIndex', regex='1')], target="pmmV2"),
-        RoutingRule(uri='firm-order', conditions=[MatchRule(field='chainIndex', regex='56'), MatchRule(field='beneficiaryAddress', regex='0x949e4CcD90d661e2c68cB5CEDB9a13c0748bE1f6')], target="pmmV2"),
-        RoutingRule(uri='firm-order', conditions=[], target="pmmV1"),
+        # RoutingRule(uri='firm-order', conditions=[MatchRule(field='chainIndex', regex='1')], target="pmmV2"),
+        # RoutingRule(uri='firm-order', conditions=[MatchRule(field='chainIndex', regex='56'), MatchRule(field='beneficiaryAddress', regex='0x949e4CcD90d661e2c68cB5CEDB9a13c0748bE1f6')], target="pmmV2"),
+        RoutingRule(uri='firm-order', conditions=[], target="pmmV2"),
     ]
 
 
