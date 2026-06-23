@@ -1,10 +1,13 @@
 import logging
+import asyncio
+import atexit
 from typing import Optional, Dict, Any
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import JSONResponse
 
 from gateway.router import Router
-from gateway.http_client import HTTPClient
+from gateway.http_client import HTTPClient, close_http_client
+import atexit
 
 logger = logging.getLogger()
 
@@ -17,6 +20,7 @@ def init_gateway(routing_table, backend_map):
     global router
     router = Router(routing_table=routing_table, backend_map=backend_map)
     logger.info("Gateway initialized")
+    atexit.register(lambda: asyncio.get_event_loop().run_until_complete(close_http_client()))
 
 
 @app.get("/OKXDEX/rfq/pricing")

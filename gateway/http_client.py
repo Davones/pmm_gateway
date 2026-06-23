@@ -4,19 +4,39 @@ from typing import Optional, Dict, Any
 
 logger = logging.getLogger()
 
+_global_client: Optional[httpx.AsyncClient] = None
+
+
+def get_http_client() -> httpx.AsyncClient:
+    global _global_client
+    if _global_client is None:
+        _global_client = httpx.AsyncClient(
+            timeout=5.0,
+            limits=httpx.Limits(
+                max_connections=500,
+                max_keepalive_connections=100,
+            ),
+        )
+    return _global_client
+
+
+async def close_http_client():
+    global _global_client
+    if _global_client is not None:
+        await _global_client.aclose()
+        _global_client = None
+
 
 class HTTPClient:
     def __init__(self, timeout: float = 5.0):
         self.timeout = timeout
-        self._client: Optional[httpx.AsyncClient] = None
 
     async def __aenter__(self):
-        self._client = httpx.AsyncClient(timeout=self.timeout)
+        self._client = get_http_client()
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
-        if self._client:
-            await self._client.aclose()
+        pass
 
     async def forward_request(
         self,

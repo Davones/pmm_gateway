@@ -35,13 +35,13 @@ class AppConfig(python_library.utils.baseconfig.BaseConfig):
     }
     OKX_PMM_REQUEST_ROUTING_TABLE = [
         # pricing
-        # RoutingRule(uri='pricing', conditions=[MatchRule(field='chainIndex', regex='1')], target="pmmV2"),
+        RoutingRule(uri='pricing', conditions=[MatchRule(field='chainIndex', regex='1')], target="pmmV2"),
         RoutingRule(uri='pricing', conditions=[], target="pmmV1"),
 
         # firm-order
-        # RoutingRule(uri='firm-order', conditions=[MatchRule(field='chainIndex', regex='1')], target="pmmV2"),
+        RoutingRule(uri='firm-order', conditions=[MatchRule(field='chainIndex', regex='1')], target="pmmV2"),
         # RoutingRule(uri='firm-order', conditions=[MatchRule(field='beneficiaryAddress', regex='0x.*[Ff]{2}$')], target="pmmV1"),
-        RoutingRule(uri='firm-order', conditions=[MatchRule(field='chainIndex', regex='56'), MatchRule(field='beneficiaryAddress', regex='0x949e4CcD90d661e2c68cB5CEDB9a13c0748bE1f6')], target="pmmV2"),
+        # RoutingRule(uri='firm-order', conditions=[MatchRule(field='chainIndex', regex='1'), MatchRule(field='beneficiaryAddress', regex='0x.*[Ff]{2}$')], target="pmmV2"),
         RoutingRule(uri='firm-order', conditions=[], target="pmmV1"),
     ]
     # curl -v -X GET "http://127.0.0.1:8081/OKXDEX/rfq/pricing?chainIndex=56" -H "X-API-KEY: newworld-api-key-Tm2s#88%sUs6"
