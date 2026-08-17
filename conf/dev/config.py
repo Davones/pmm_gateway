@@ -30,7 +30,7 @@ class AppConfig(python_library.utils.baseconfig.BaseConfig):
     # okx网关监听的本地地址
     OKX_PMM_GETWAY_HOSTPORT = ("0.0.0.0", 1495)
     BACKEND_SERVER_MAP = {
-        "pmmV2": "127.0.0.1:19099",
+        "pmmV2": "127.0.0.1:19098",
         "pmmV1": "127.0.0.1:8080",
     }
     OKX_PMM_REQUEST_ROUTING_TABLE = [
