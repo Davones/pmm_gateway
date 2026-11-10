@@ -1,3 +1,0 @@
-[submodule "python_library"]
-	path = python_library
-	url = git@github.com:Davones/python_library.git

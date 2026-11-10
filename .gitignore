@@ -1,6 +1,9 @@
 .idea
-*__pycache__
+__pycache__
 venv
 log
+logs/
 data
 nohup.out
+fwd_report*.csv
+*.pid

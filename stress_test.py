@@ -239,15 +239,25 @@ async def run_qps_test(
 
 
 # ---------------- 突发压测(模拟 OKX 突发) ----------------
+# 客户端自身并发闸: 压测端在 2000 并发下自身 httpx 池也会退化(httpcore 池
+# 高并发下 O(n²) 重分配, 与网关旧版同款问题), 导致测出的延迟全是客户端伪影。
+# 把客户端在途请求封顶在 BURST_CLIENT_CONCURRENCY, 突发压力靠"打满即补"维持。
+BURST_CLIENT_CONCURRENCY = 500
+
+
 async def run_burst(n, url, method, body, params, timeout, rfqid_mode, rfqid_base, csv_writer=None):
-    print(f"burst: 同时发出 {n} 个请求 ...", flush=True)
+    print(f"burst: 发出 {n} 个请求(客户端并发封顶 {BURST_CLIENT_CONCURRENCY})...", flush=True)
     counter = itertools.count(0)
+    client_sem = asyncio.Semaphore(min(n, BURST_CLIENT_CONCURRENCY))
     t_start = time.perf_counter()
-    async with make_client(concurrency=n, timeout=timeout) as client:
+    async with make_client(concurrency=min(n, BURST_CLIENT_CONCURRENCY), timeout=timeout) as client:
         bodies = [build_body(body, rfqid_mode, counter, rfqid_base) for _ in range(n)]
-        results = await asyncio.gather(
-            *[send_one(client, url, method, b, params) for b in bodies]
-        )
+
+        async def limited_send(b):
+            async with client_sem:
+                return await send_one(client, url, method, b, params)
+
+        results = await asyncio.gather(*[limited_send(b) for b in bodies])
 
     latencies: List[float] = []
     errors: Counter = Counter()
