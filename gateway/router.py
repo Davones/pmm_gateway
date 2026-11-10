@@ -9,47 +9,46 @@ class Router:
     def __init__(self, routing_table: List, backend_map: Dict[str, str]):
         self.routing_table = routing_table
         self.backend_map = backend_map
-
-    def _group_by_uri(self) -> Dict[str, List]:
-        groups = {}
-        for rule in self.routing_table:
-            if rule.uri not in groups:
-                groups[rule.uri] = []
-            groups[rule.uri].append(rule)
-        return groups
+        # 启动时预构建: uri -> [(compiled_conditions, target), ...]
+        # 避免每个请求都重建分组表和重新编译正则
+        self._groups: Dict[str, List] = {}
+        for rule in routing_table:
+            compiled = [
+                (condition.field, re.compile(condition.regex, re.IGNORECASE))
+                for condition in (rule.conditions or [])
+            ]
+            self._groups.setdefault(rule.uri, []).append((compiled, rule.target))
 
     def route(self, uri: str, request_data: Dict[str, Any]) -> Optional[str]:
         uri = uri.lstrip('/')
-        groups = self._group_by_uri()
+        rules = self._groups.get(uri)
 
-        if uri not in groups:
+        if not rules:
             logger.warning(f"No routing rules found for uri: {uri}")
             return None
 
-        rules = groups[uri]
-        for rule in rules:
-            if self._match_rule(rule, request_data):
-                target = rule.target
+        for conditions, target in rules:
+            if self._match_conditions(conditions, request_data):
                 backend_addr = self.backend_map.get(target)
-                logger.info(f"Routed {uri} to {target} ({backend_addr})")
+                logger.debug(f"Routed {uri} to {target} ({backend_addr})")
                 return backend_addr
 
         logger.warning(f"No matching rule found for uri: {uri}, using default")
         return None
 
-    def _match_rule(self, rule, request_data: Dict[str, Any]) -> bool:
-        if not rule.conditions:
+    @staticmethod
+    def _match_conditions(conditions, request_data: Dict[str, Any]) -> bool:
+        if not conditions:
             return True
 
-        for condition in rule.conditions:
-            field_value = request_data.get(condition.field)
+        for field, pattern in conditions:
+            field_value = request_data.get(field)
             if field_value is None:
-                logger.debug(f"Field '{condition.field}' not found in request data")
+                logger.debug(f"Field '{field}' not found in request data")
                 return False
 
-            field_str = str(field_value)
-            if not re.match(condition.regex, field_str, re.IGNORECASE):
-                logger.debug(f"Field '{condition.field}' value '{field_str}' does not match regex '{condition.regex}'")
+            if not pattern.match(str(field_value)):
+                logger.debug(f"Field '{field}' value '{field_value}' does not match regex '{pattern.pattern}'")
                 return False
 
         return True

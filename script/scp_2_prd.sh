@@ -6,6 +6,12 @@ scp ./conf/prd/* ec2-user@18.179.69.227:/home/ec2-user/Production_Env/okx_pmm_ga
 scp ./main.py ec2-user@18.179.69.227:/home/ec2-user/Production_Env/okx_pmm_gateway_Prd
 scp -r ./gateway ec2-user@18.179.69.227:/home/ec2-user/Production_Env/okx_pmm_gateway_Prd
 
+# 压测与日志分析工具
+scp ./stress_test.py ec2-user@18.179.69.227:/home/ec2-user/Production_Env/okx_pmm_gateway_Prd
+scp ./log_correlate.py ec2-user@18.179.69.227:/home/ec2-user/Production_Env/okx_pmm_gateway_Prd
+scp ./script/parse_fwd.py ec2-user@18.179.69.227:/home/ec2-user/Production_Env/okx_pmm_gateway_Prd/script/
+scp -r ./docs ec2-user@18.179.69.227:/home/ec2-user/Production_Env/okx_pmm_gateway_Prd
+
 # 依赖清单 + 环境安装脚本 (首次部署/依赖变更时才需要)
 scp ./requirements.txt ec2-user@18.179.69.227:/home/ec2-user/Production_Env/okx_pmm_gateway_Prd
 scp ./script/setup_env.sh ec2-user@18.179.69.227:/home/ec2-user/Production_Env/okx_pmm_gateway_Prd/script/

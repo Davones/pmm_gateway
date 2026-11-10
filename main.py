@@ -2,7 +2,9 @@ import os, sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__)) + os.path.sep + '../..'))
 
 import asyncio
+import faulthandler
 import logging
+import signal
 import uvicorn
 
 from conf.config import utils_config_init, AppConfig
@@ -14,10 +16,24 @@ def setup_logging():
         level=logging.INFO,
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     )
+    # 压掉 httpx/httpcore 每请求一条的 INFO 日志(高 QPS 下是同步写开销)
+    logging.getLogger("httpx").setLevel(logging.WARNING)
+    logging.getLogger("httpcore").setLevel(logging.WARNING)
+
+
+def setup_faulthandler():
+    # 排障用: 生产进程卡死/空转时, 执行 `kill -USR1 <pid>` 会把全部线程的
+    # Python 堆栈打到 stderr(日志文件), 进程不退出。
+    faulthandler.enable()
+    try:
+        faulthandler.register(signal.SIGUSR1, all_threads=True, chain=False)
+    except Exception:
+        pass
 
 
 def main():
     setup_logging()
+    setup_faulthandler()
     utils_config_init()
 
     logger = logging.getLogger()
@@ -36,6 +52,9 @@ def main():
         host=host,
         port=port,
         log_level="info",
+        # 关闭 uvicorn 访问日志: 高 QPS 下每请求多一次同步写日志,
+        # 请求级日志已由 gateway/server.py 的 _log_request_timing 统一输出
+        access_log=False,
     )
 
 
